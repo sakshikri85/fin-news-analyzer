@@ -12,16 +12,17 @@ sector, and displays a BUY / SELL / HOLD signal card per sector.
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 import pandas as pd
 import streamlit as st
 from streamlit_autorefresh import st_autorefresh
-
 from config import REFRESH_INTERVAL_SECONDS
 from database import SignalDatabase
 from news_fetcher import NewsFetcher
 from signal_engine import SignalEngine
+
+IST = timezone(timedelta(hours=5, minutes=30))
 
 st.set_page_config(
     page_title="Financial News Impact Analyzer",
@@ -114,7 +115,7 @@ def main():
                 db.save_signals(signals)
 
             st.success(
-                f"Last updated: {datetime.now().strftime('%d %b %Y, %H:%M:%S')} "
+                f"Last updated: {datetime.now(IST).strftime('%d %b %Y, %H:%M:%S')} IST "
                 f"\u2014 {len(news_items)} articles analyzed across {len(signals)} sectors."
             )
 
