@@ -12,11 +12,11 @@ sector, and displays a BUY / SELL / HOLD signal card per sector.
 
 from __future__ import annotations
 
-import time
 from datetime import datetime
 
 import pandas as pd
 import streamlit as st
+from streamlit_autorefresh import st_autorefresh
 
 from config import REFRESH_INTERVAL_SECONDS
 from database import SignalDatabase
@@ -90,6 +90,12 @@ def main():
     with col_c:
         run_now = st.button("Refresh now", use_container_width=True)
 
+    # Non-blocking auto-refresh: this schedules a browser-side timer that
+    # triggers a rerun every `interval` seconds WITHOUT freezing the app,
+    # so "Refresh now" and other interactions keep working instantly.
+    if auto_refresh:
+        st_autorefresh(interval=interval * 1000, key="auto_refresh_timer")
+
     placeholder = st.empty()
 
     def run_and_render():
@@ -137,15 +143,7 @@ def main():
                 st.dataframe(df, use_container_width=True, hide_index=True)
                 st.bar_chart(df.set_index("Sector")["Sentiment"])
 
-    if run_now or "initialized" not in st.session_state:
-        st.session_state["initialized"] = True
-        run_and_render()
-    else:
-        run_and_render()
-
-    if auto_refresh:
-        time.sleep(interval)
-        st.rerun()
+    run_and_render()
 
 
 if __name__ == "__main__":
