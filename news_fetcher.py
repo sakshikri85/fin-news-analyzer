@@ -1,10 +1,3 @@
-"""
-news_fetcher.py
-Fetches recent financial news headlines in real time from free RSS feeds.
-No API key required. Designed to fail gracefully: if one feed is down or
-the machine has no internet access at that moment, other feeds still work
-and the caller gets whatever was successfully retrieved.
-"""
 
 from __future__ import annotations
 
@@ -31,12 +24,10 @@ class NewsItem:
 
     @property
     def full_text(self) -> str:
-        """Combined text used for NLP (title carries most signal)."""
         return f"{self.title}. {self.summary}".strip()
 
 
 class NewsFetcher:
-    """Pulls the latest items from all configured RSS feeds."""
 
     def __init__(self, feed_urls: List[str] | None = None):
         self.feed_urls = feed_urls or RSS_FEEDS
@@ -69,13 +60,11 @@ class NewsFetcher:
                         published=self._parse_published(entry),
                     )
                 )
-        except Exception as exc:  # network issues, malformed XML, etc.
+        except Exception as exc:
             logger.warning("Failed to fetch feed %s: %s", url, exc)
         return items
 
     def fetch_latest_news(self) -> List[NewsItem]:
-        """Fetch and merge items from every configured feed, newest first,
-        de-duplicated by title."""
         all_items: List[NewsItem] = []
         seen_titles = set()
 

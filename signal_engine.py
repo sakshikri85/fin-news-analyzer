@@ -1,11 +1,3 @@
-"""
-signal_engine.py
-Aggregates per-article sentiment into a rolling, time-weighted sentiment
-score for each sector, and converts that into a simple investment signal:
-BUY / SELL / HOLD, along with a confidence percentage.
-
-This is a heuristic/educational signal generator, not financial advice.
-"""
 
 from __future__ import annotations
 
@@ -32,7 +24,7 @@ class SectorSignal:
     sector: str
     avg_sentiment: float
     article_count: int
-    signal: str          # BUY / SELL / HOLD
+    signal: str
     confidence_pct: float
     top_articles: List[AnalyzedArticle]
 
@@ -52,8 +44,6 @@ class SignalEngine:
 
     @staticmethod
     def _recency_weight(published: datetime) -> float:
-        """More recent articles count more. Half-life-ish linear decay
-        over 24 hours, floor at 0.2 so old-but-relevant news still counts."""
         now = datetime.now(timezone.utc)
         age_hours = max(0.0, (now - published).total_seconds() / 3600.0)
         weight = 1.0 - min(age_hours / 24.0, 0.8)
@@ -76,7 +66,7 @@ class SignalEngine:
 
         results: Dict[str, SectorSignal] = {}
         for sector, articles in by_sector.items():
-            # Most recent N articles for this sector, newest first.
+
             articles = sorted(articles, key=lambda a: a.news.published, reverse=True)
             window = articles[:ROLLING_WINDOW_SIZE]
 

@@ -1,9 +1,3 @@
-"""
-database.py
-Lightweight SQLite storage so the analyzer can keep a history of sector
-signals over time (useful for charts in the dashboard and for auditing
-why a signal changed). Uses only the Python standard library.
-"""
 
 from __future__ import annotations
 

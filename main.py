@@ -1,15 +1,3 @@
-"""
-main.py
-Real-time command-line runner for the Financial News Impact Analyzer.
-
-Run:
-    python main.py            # runs continuously, refreshing every
-                               # REFRESH_INTERVAL_SECONDS (see config.py)
-    python main.py --once     # runs a single analysis cycle and exits
-
-For a visual, auto-refreshing dashboard instead, run:
-    streamlit run app.py
-"""
 
 from __future__ import annotations
 

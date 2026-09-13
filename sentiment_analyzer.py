@@ -1,13 +1,3 @@
-"""
-sentiment_analyzer.py
-NLP sentiment scoring for financial news text.
-
-Uses VADER (rule-based sentiment analyzer, fast and dependency-light -
-ideal for real-time processing without a GPU) as the base engine, and
-layers a finance-specific lexicon on top since VADER out of the box is
-tuned for social-media text rather than financial reporting language
-(e.g. "profit plunges" should score negative, "beats estimates" positive).
-"""
 
 from __future__ import annotations
 
@@ -21,22 +11,22 @@ from config import FINANCE_LEXICON_BOOST
 
 @dataclass
 class SentimentResult:
-    compound: float          # -1 .. +1 overall sentiment
+    compound: float
     positive: float
     negative: float
     neutral: float
-    label: str                # "Positive" / "Negative" / "Neutral"
+    label: str
 
 
 class SentimentAnalyzer:
     def __init__(self):
         self._vader = SentimentIntensityAnalyzer()
-        # Merge our finance-specific phrase boosts into VADER's lexicon.
+
         self._vader.lexicon.update(FINANCE_LEXICON_BOOST)
 
     @staticmethod
     def _clean(text: str) -> str:
-        text = re.sub(r"<[^>]+>", " ", text)     # strip any HTML in RSS summaries
+        text = re.sub(r"<[^>]+>", " ", text)
         text = re.sub(r"\s+", " ", text).strip()
         return text
 
@@ -44,13 +34,12 @@ class SentimentAnalyzer:
         clean_text = self._clean(text)
         scores = self._vader.polarity_scores(clean_text)
 
-        # Apply multi-word finance phrase boosts VADER's tokenizer would
-        # otherwise miss (VADER scores word-by-word).
+
         lowered = clean_text.lower()
         phrase_adjustment = 0.0
         for phrase, weight in FINANCE_LEXICON_BOOST.items():
             if " " in phrase and phrase in lowered:
-                phrase_adjustment += weight * 0.1  # scaled contribution
+                phrase_adjustment += weight * 0.1
 
         compound = max(-1.0, min(1.0, scores["compound"] + phrase_adjustment))
 

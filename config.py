@@ -1,13 +1,5 @@
-"""
-Configuration for Financial News Impact Analyzer.
-Contains RSS news sources and sector -> keyword/company mappings
-used for classifying each news item into a market sector.
-"""
 
-# ---------------------------------------------------------------------------
-# Free, no-API-key RSS feeds (Indian financial/business news).
-# You can add/remove feeds freely; the fetcher will skip any that fail.
-# ---------------------------------------------------------------------------
+
 RSS_FEEDS = [
     "https://economictimes.indiatimes.com/markets/rssfeeds/1977021501.cms",
     "https://www.moneycontrol.com/rss/business.xml",
@@ -16,22 +8,17 @@ RSS_FEEDS = [
     "https://www.livemint.com/rss/markets",
 ]
 
-# How many seconds between automatic refresh cycles in real-time mode.
+
 REFRESH_INTERVAL_SECONDS = 120
 
-# How many most-recent articles (per sector) to consider when computing
-# the rolling sentiment signal.
+
 ROLLING_WINDOW_SIZE = 15
 
-# Signal thresholds (on a -1 .. +1 compound sentiment scale)
+
 BUY_THRESHOLD = 0.15
 SELL_THRESHOLD = -0.15
 
-# ---------------------------------------------------------------------------
-# Sector classification map: sector name -> list of keywords / company
-# names / tickers that indicate a news item belongs to that sector.
-# Matching is case-insensitive substring matching on title + summary.
-# ---------------------------------------------------------------------------
+
 SECTOR_KEYWORDS = {
     "Banking & Financial Services": [
         "hdfc", "icici", "sbi", "state bank", "axis bank", "kotak mahindra",
@@ -85,17 +72,15 @@ SECTOR_KEYWORDS = {
     ],
 }
 
-# Extra finance-specific words that push VADER's generic sentiment score
-# in the right direction for market news (VADER's default lexicon is
-# tuned for social-media text, not financial reporting).
+
 FINANCE_LEXICON_BOOST = {
-    # positive
+
     "rally": 2.0, "surge": 2.2, "surges": 2.2, "soar": 2.3, "soars": 2.3,
     "jumps": 1.8, "beat estimates": 2.5, "beats estimates": 2.5,
     "record high": 2.4, "upgraded": 1.8, "outperform": 1.6, "bullish": 2.0,
     "profit rises": 2.0, "strong quarter": 1.8, "buyback": 1.2,
     "raises guidance": 2.0, "wins order": 1.5, "expansion": 1.0,
-    # negative
+
     "plunge": -2.3, "plunges": -2.3, "tumbles": -2.0, "crashes": -2.4,
     "slumps": -2.0, "miss estimates": -2.5, "misses estimates": -2.5,
     "downgraded": -1.8, "bearish": -2.0, "probe": -1.7, "fraud": -2.6,

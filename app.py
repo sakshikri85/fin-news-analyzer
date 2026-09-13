@@ -1,14 +1,3 @@
-"""
-app.py
-Streamlit real-time dashboard for the Financial News Impact Analyzer.
-
-Run with:
-    streamlit run app.py
-
-The page auto-refreshes on a timer, re-fetches the latest financial news
-from RSS feeds, runs NLP sentiment analysis, classifies articles by
-sector, and displays a BUY / SELL / HOLD signal card per sector.
-"""
 
 from __future__ import annotations
 
@@ -17,6 +6,7 @@ from datetime import datetime, timezone, timedelta
 import pandas as pd
 import streamlit as st
 from streamlit_autorefresh import st_autorefresh
+
 from config import REFRESH_INTERVAL_SECONDS
 from database import SignalDatabase
 from news_fetcher import NewsFetcher
@@ -91,9 +81,7 @@ def main():
     with col_c:
         run_now = st.button("Refresh now", use_container_width=True)
 
-    # Non-blocking auto-refresh: this schedules a browser-side timer that
-    # triggers a rerun every `interval` seconds WITHOUT freezing the app,
-    # so "Refresh now" and other interactions keep working instantly.
+
     if auto_refresh:
         st_autorefresh(interval=interval * 1000, key="auto_refresh_timer")
 

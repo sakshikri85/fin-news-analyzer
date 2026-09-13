@@ -1,10 +1,3 @@
-"""
-sector_classifier.py
-Classifies a piece of financial news text into one or more market sectors
-using keyword/company-name matching (fast, deterministic, no model needed
-for real-time throughput). A news item can belong to more than one sector
-if it mentions companies/keywords from multiple sectors.
-"""
 
 from __future__ import annotations
 
@@ -17,7 +10,7 @@ UNCLASSIFIED = "General / Unclassified"
 
 class SectorClassifier:
     def __init__(self):
-        # Pre-lowercase keywords once for fast matching.
+
         self._map = {
             sector: [kw.lower() for kw in keywords]
             for sector, keywords in SECTOR_KEYWORDS.items()
